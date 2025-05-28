@@ -40,12 +40,12 @@ layout = html.Div([
             html.H3('ADD'),
             html.P('The original source offered valuable additional context'),
             html.Br(),
-            dcc.Graph(id='g1', config={'displayModeBar': False})
+            dcc.Graph(id='g3', config={'displayModeBar': False})
         ], style={'width': '900px'})
     ])
 
-@callback(Output('g1', 'figure'), Input('check', 'value'))
-def update_viz(checkbox_values):
+@callback(Output('g3', 'figure'), Input('check', 'value'))
+def update_ev_add_viz(checkbox_values):
 
     selected = [cat.lower() for cat in checkbox_values]
 
