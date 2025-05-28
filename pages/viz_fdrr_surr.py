@@ -58,11 +58,11 @@ layout = html.Div(children=[
     #html.P(style={'textAlign': 'center'}, id = 'statement', children=''),
     html.Div([
         html.Div([
-            dcc.Graph(id='graph1', config={'displayModeBar': False})
+            dcc.Graph(id='g6', config={'displayModeBar': False})
         ], className="six columns"),
 
         html.Div([
-            dcc.Graph(id='graph2', config={'displayModeBar': False})
+            dcc.Graph(id='g7', config={'displayModeBar': False})
         ], className="six columns"),
     ],  style={'margin-left': '25px'}, className="row"),
     html.Ul([html.Li('-Indicates a non-significant effect as it crosses the 0 or 1x line.')],
@@ -75,8 +75,8 @@ layout = html.Div(children=[
 #     return f'Comparing ratings of a {value} to other behaviors'
 
 
-@callback(Output('graph1', 'figure'), Output('graph2', 'figure'), Input('dd-pre', 'value'),  Input('dd-post', 'value'))
-def update_viz(ddpre, ddpost):
+@callback(Output('g6', 'figure'), Output('g7', 'figure'), Input('dd-pre', 'value'),  Input('dd-post', 'value'))
+def update_fdrr_surr_viz(ddpre, ddpost):
 
     fig1 = go.Figure()
     fig2 = go.Figure()
