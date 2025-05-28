@@ -48,11 +48,11 @@ layout = html.Div(children=[
                 tooltip={"placement": "bottom", "always_visible": True}, 
                 id='slider')],
              style = { 'display': 'inline-block', 'width':'50%'}),
-    dcc.Graph(id="graph", config={'displayModeBar': False}, style={'textAlign': 'center', 'width': '700px'}) 
+    dcc.Graph(id="g1", config={'displayModeBar': False}, style={'textAlign': 'center', 'width': '700px'}) 
 ])
 
-@callback(Output('graph', 'figure'), Input('slider', 'value'), Input('radio', 'value'))
-def update_viz(slider_value, radio_value):
+@callback(Output('g1', 'figure'), Input('slider', 'value'), Input('radio', 'value'))
+def update_inf_viz(slider_value, radio_value):
     if(radio_value == 'Primary Reporting'):
         primary = 1
     else:
