@@ -39,12 +39,12 @@ layout = html.Div([
     html.Div([
             html.H3('SURR'),
             html.P('The summary captured the article well enough to act as a surrogate.'),
-            dcc.Graph(id='g1', config={'displayModeBar': False})
+            dcc.Graph(id='g2', config={'displayModeBar': False})
         ], style={'width': '900px'})
     ])
 
-@callback(Output('g1', 'figure'), Input('check', 'value'))
-def update_viz(checkbox_values):
+@callback(Output('g2', 'figure'), Input('check', 'value'))
+def update_ev_surr_viz(checkbox_values):
 
 
     selected = [cat.lower() for cat in checkbox_values]
