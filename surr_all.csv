@@ -1,0 +1,16 @@
+rating,probability,2.50%,97.50%,behavior
+Strongly<br>Disagree,0.53,0.49,0.57,reviewer
+Disagree,0.29,0.25,0.32,reviewer
+Neutral,0.1,0.08,0.13,reviewer
+Agree,0.05,0.04,0.07,reviewer
+Strongly<br>Agree,0.03,0.02,0.04,reviewer
+Strongly<br>Disagree,0.14,0.11,0.17,conversationalist
+Disagree,0.25,0.22,0.28,conversationalist
+Neutral,0.23,0.2,0.26,conversationalist
+Agree,0.21,0.18,0.24,conversationalist
+Strongly<br>Agree,0.17,0.14,0.2,conversationalist
+Strongly<br>Disagree,0.07,0.05,0.08,tracker
+Disagree,0.15,0.13,0.18,tracker
+Neutral,0.2,0.17,0.23,tracker
+Agree,0.26,0.23,0.3,tracker
+Strongly<br>Agree,0.32,0.28,0.36,tracker
