@@ -79,8 +79,8 @@ def update_ev_surr_viz(checkbox_values):
     fig1.update_traces(error_y_color='gray', error_y_thickness=1)
     fig1.update_layout(yaxis_range=[0, 1])
     fig1.update_layout(
-        yaxis_title = "Probability of a User rating X",
-        xaxis_title="X",
+        yaxis_title = "Probability of a User rating (X)",
+        xaxis_title="Likert Rating (X)",
         showlegend = True
     )
     
