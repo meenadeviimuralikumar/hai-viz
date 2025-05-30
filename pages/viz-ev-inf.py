@@ -96,8 +96,8 @@ def update_inf_viz(slider_value, radio_value):
                                  )])
     fig.update_yaxes(range=[0, 1])
     fig.update_layout(
-        yaxis_title = "Probability of a User rating X",
-        xaxis_title="X"
+        yaxis_title = "Probability of a User rating (X)",
+        xaxis_title="Likert Rating (X)"
     )
     return fig
 
