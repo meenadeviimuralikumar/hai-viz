@@ -20,6 +20,9 @@ df_surr =  pd.read_csv("surr_all.csv")
 layout = html.Div([
     html.Br(),
     html.H4(style={'textAlign': 'center'}, children='How did different kinds of news readers rate the SURR attribute?'),
+    html.Br(),
+    html.Div([html.P('[SURR] The summary captured the article well enough to act as a stand-in/surrogate.')],
+           style={'width': '800px', 'text-align': 'center', 'margin-left':'325px'}),
     html.P('SURR  <- article_length + article_type + summary_length + news_reading_behavior', 
            style={'font-family':'monospace', 'color':'#4b7df0', 'display': 'flex', 'justifyContent': 'center', 'align-items': 'center'}),
     html.Div([html.P('For the above model, we will keep values of all other variables constant (at their mean or mode), and vary the news reading behavior')],
@@ -37,10 +40,15 @@ layout = html.Div([
         ),
     ], style={'display': 'flex', 'align-items': 'center', 'margin-left': '420px', 'margin-bottom': '20px'}),    
     html.Div([
-            html.H3('SURR'),
-            html.P('The summary captured the article well enough to act as a surrogate.'),
             dcc.Graph(id='g2', config={'displayModeBar': False})
-        ], style={'width': '900px'})
+        ], style={'width': '900px'}),
+    html.Br(),
+    html.Br(),
+    html.Ul(children=[
+        html.Li('Tracker: Likes to stay updated; Spends 5-10 mins per day; Uses skimming or scanning techniques to catch up on news'),
+        html.Li('Conversationalist: Likes to read news and read the comments section; Often comments and engages in discussion'),
+        html.Li('Reviewer: Likes to read in-depth and thoroughly; Spends considerable time reading articles of interest, allocates time for it by possibly saving articles for later')
+    ], style={'textAlign': 'center'})
     ])
 
 @callback(Output('g2', 'figure'), Input('check', 'value'))
