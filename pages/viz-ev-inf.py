@@ -20,6 +20,8 @@ df = pd.read_csv("inf_evs.csv")
 layout = html.Div(children=[
     html.Br(),
     html.H4(style={'textAlign': 'center'}, children='Comparing Summary Informativeness across Article Types & Length'),
+    html.Div([html.P('[INF] The summary covered the key points of the news article.')],
+           style={'width': '800px', 'text-align': 'center', 'margin-left':'325px'}),
     html.P('INF  <- article_length + article_type + summary_length + news_reading_behavior', 
            style={'font-family':'monospace', 'color':'#4b7df0', 'display': 'flex', 'justifyContent': 'center', 'align-items': 'center'}),
     html.Div([html.P('For the above model, we will keep values of all other variables constant (at their mean or mode), and vary only the article type and length (significant effects)')],
@@ -36,7 +38,7 @@ layout = html.Div(children=[
             id='radio'),
     ], style={'display': 'flex', 'align-items': 'center', 'margin-left': '20px', 'margin-bottom': '20px'}),
     html.Br(),
-    html.Div([html.Label('Adjust Article Length:', style={'margin-right': '10px'}), 
+    html.Div([html.Label('Adjust Article Length (no.of words):', style={'margin-right': '10px'}), 
               dcc.Slider(900, 1200, step=1, value=1050,
                 marks={
                     900: {'label': '900'},
