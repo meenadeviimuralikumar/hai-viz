@@ -11,7 +11,7 @@ import numpy as np
 # Initialize the app
 #app = Dash(__name__, external_stylesheets=external_stylesheets)
 
-df_add = pd.read_csv("add_all.csv")
+#df_add = pd.read_csv("add_all.csv")
 
 
 dash.register_page(__name__, path="/ev-add")
@@ -25,65 +25,144 @@ layout = html.Div([
     html.Div([html.P('For the above model, we will keep values of all other variables constant (at their mean or mode), and vary the news reading behavior')],
            style={'width': '750px', 'text-align': 'center', 'margin-left':'325px'}),
     html.Div([
-        html.P('article_length = 1005 words, article_type = Primary Reporting, summary_length = 97 words'),
+        html.Pre('[Current]  P(A) => 1005 words + Primary Reporting + 97 words +  '),
+        dcc.Dropdown(
+            id='add-pre',
+            options=[
+                {'label': 'Conversationalist', 'value': 'Conversationalist'},
+                {'label': 'Reviewer', 'value': 'Reviewer'},
+                {'label': 'Tracker', 'value': 'Tracker'}
+            ],
+        value='Conversationalist',
+        style={'width': '200px'}
+        )
     ], style={'color':'#4b7df0', 'font-family':'monospace', 'display': 'flex', 'justifyContent': 'center', 'align-items': 'center', 'padding': '20px'}),
     html.Div([
-        html.Label('Select News Reading Behavior:', style={'margin': '15px'}),
-        dcc.Checklist(
-            ['Tracker', 'Reviewer', 'Conversationalist'],
-            ['Tracker', 'Reviewer', 'Conversationalist'],
-            inline = True,
-            id = 'check'
-        ),
-    ], style={'display': 'flex', 'align-items': 'center', 'margin-left': '420px', 'margin-bottom': '20px'}),    
-    html.Div([
-            html.H3('ADD'),
-            html.P('The original source offered valuable additional context'),
-            html.Br(),
-            dcc.Graph(id='g3', config={'displayModeBar': False})
-        ], style={'width': '900px'})
+        html.Pre('[What-If]  P(B) => 1005 words + Primary Reporting + 97 words +  '),
+        dcc.Dropdown(
+            id='add-post',
+            options=[
+                {'label': 'Conversationalist', 'value': 'Conversationalist'},
+                {'label': 'Reviewer', 'value': 'Reviewer'},
+                {'label': 'Tracker', 'value': 'Tracker'}
+            ],
+        value='Conversationalist',
+        style={'width': '200px'}
+        )
+    ], style={'color':'#4b7df0', 'font-family':'monospace', 'display': 'flex', 'justifyContent': 'center', 'align-items': 'center', 'padding': '20px'}),
+    html.Div(id="contingency-table"),
+    html.Br(),
+    html.Br(),
+    html.Br(),
+    html.P('(Greyed out text ndicates non-significant effect as the interval contains 0 or 1 respectively)', style={'color': '#C0C0C0', 'font-size': '14px', 'text-align': 'center'})
     ])
 
-@callback(Output('g3', 'figure'), Input('check', 'value'))
-def update_ev_add_viz(checkbox_values):
-
-    selected = [cat.lower() for cat in checkbox_values]
-
-    df2 = df_add[df_add['behavior'].isin(selected)]
-
-    fig2 = go.Figure()
+@callback(Output('contingency-table', 'children'), Input('add-pre', 'value'),  Input('add-post', 'value'))
+def update_ev_add_viz(addpre, addpost):
 
 
-    if(len(checkbox_values) > 1):
+    columns = ['', 'Absolute Difference[P(B) - P(A)]', 'Relative Difference [P(B) / P(A)]']
+    header = html.Tr([html.Th(col, style={"padding": "12px"}) for col in columns])
 
-        fig2 = px.bar(df2, x="rating", y="probability",
-                 color="behavior", 
-                 barmode='group',
-                 color_discrete_map={'tracker': '#6ACDFF', 'conversationalist': '#FF9898', 'reviewer': '#95D86E'},
-                 error_y=df2['97.50%'] - df2['probability'], 
-                 error_y_minus= df2['probability'] - df2['2.50%'])
+    if(addpre == addpost):
 
-    elif(len(selected) == 1):
-        if(selected[0]) == 'tracker':
-            col = '#6ACDFF'
-        elif(selected[0] == 'reviewer'):
-            col = '#95D86E'
-        else:
-            col = '#FF9898'
-        fig2 = px.bar(df2, x="rating", y="probability",
-                 color_discrete_sequence=[col],
-                 error_y=df2['97.50%'] - df2['probability'], 
-                 error_y_minus= df2['probability'] - df2['2.50%'])
-        fig2.update_layout(showlegend = True)
+        rows = [
+            html.Tr([html.Td('Strongly Disagree/Disagree', style={"padding": "8px"})] +
+                [html.Td(0, style={"padding": "8px"})] +
+                [html.Td(1, style={"padding": "8px"})]),
+            html.Tr([html.Td('Neutral', style={"padding": "8px"})] +
+                [html.Td(0, style={"padding": "8px"})] +
+                [html.Td(1, style={"padding": "8px"})]),
+            html.Tr([html.Td('Agree/Strongly Agree', style={"padding": "8px"})] +
+                [html.Td(0, style={"padding": "8px"})] +
+                [html.Td(1, style={"padding": "8px"})])
+        ]
+
+        return html.Table([header] + rows, style={"border-collapse": "collapse",'margin-left': 'auto', 'margin-right': 'auto'})
+
+    if(addpre != addpost):
+        full_df = pd.read_csv("concat_add.csv")
+        full_df = full_df.round(2)
+
+        pre = ''
+        post = ''
+
+        if(addpre == 'Conversationalist'):
+            pre = 'convo'
+            if(addpost == 'Reviewer'):
+                post = 'reviewer'
+            else:
+                post = 'tracker'
+
+        if(addpre == 'Reviewer'):
+            pre = 'reviewer'
+            if(addpost == 'Conversationalist'):
+                post = 'convo'
+            else:
+                post = 'tracker'
         
-    fig2.update_traces(error_y_color='gray', error_y_thickness=1)
-    fig2.update_layout(yaxis_range=[0, 1])
-    fig2.update_layout(
-        yaxis_title = "Probability of a User rating X",
-        xaxis_title="X",
-        showlegend = True
-    )
-    return fig2
+        if(addpre == 'Tracker'):
+            pre = 'tracker'
+            if(addpost == 'Conversationalist'):
+                post = 'convo'
+            else:
+                post = 'reviewer'
+             
+
+        df = full_df[full_df['pre'] == pre]
+        df = df[df['post'] == post]
+
+        ratings = ['sda_da', 'n', 'a_sa']
+        row_list = []
+        y = []
+
+        for x in range(3):
+
+            ddf = df[df['rating'] == ratings[x]]
+
+            fd = ddf.loc[ddf['measure'] == 'fd', 'prob'].iloc[0]
+            fd_low = fd - ddf.loc[ddf['measure'] == 'fd', 'lower'].iloc[0]
+            fd_up = ddf.loc[ddf['measure'] == 'fd', 'upper'].iloc[0] - fd
+
+
+            rr = ddf.loc[ddf['measure'] == 'rr', 'prob'].iloc[0]
+            rr_low = rr - ddf.loc[ddf['measure'] == 'rr', 'lower'].iloc[0]
+            rr_up = ddf.loc[ddf['measure'] == 'rr', 'upper'].iloc[0] - rr 
+
+            fd = fd.round(2)
+            fd_low = fd_low.round(2)
+            fd_up = fd_up.round(2)
+
+            rr = rr.round(2)
+            rr_low = rr_low.round(2)
+            rr_up = rr_up.round(2)
+
+            if(fd-fd_low <= 0 <= fd+fd_up):
+                y.append(x*2)
+
+            if(rr-rr_low <= 1 <= rr+rr_up):
+                y.append(x*2 + 1)
+            
+            fd = f"{fd} (+{fd_up} / -{fd_low})"
+            rr = f"{rr} (+ {rr_up} / - {rr_low})"
+            row_list.append(fd)
+            row_list.append(rr)
+
+        rows = [
+            html.Tr([html.Td('Strongly Disagree/Disagree', style={"padding": "8px"})] +
+                [html.Td(row_list[0], style={"color": "#C0C0C0","padding": "8px"} if 0 in y else {"padding": "8px"})] +
+                [html.Td(row_list[1], style={"color": "#C0C0C0","padding": "8px"} if 1 in y else {"padding": "8px"})]),
+            html.Tr([html.Td('Neutral', style={"padding": "8px"})] +
+                [html.Td(row_list[2], style={"color": "#C0C0C0","padding": "8px"} if 2 in y else {"padding": "8px"})] +
+                [html.Td(row_list[3], style={"color": "#C0C0C0","padding": "8px"} if 3 in y else {"padding": "8px"})]),
+            html.Tr([html.Td('Agree/Strongly Agree', style={"padding": "8px"})] +
+                [html.Td(row_list[4], style={"color": "#C0C0C0","padding": "8px"} if 4 in y else {"padding": "8px"})] +
+                [html.Td(row_list[5], style={"color": "#C0C0C0","padding": "8px"} if 5 in y else {"padding": "8px"})])
+        ]
+
+        return html.Table([header] + rows, style={"border-collapse": "collapse",'margin-left': 'auto', 'margin-right': 'auto'})
+
+        
 
 # Run the app
 # if __name__ == '__main__':
