@@ -50,6 +50,9 @@ layout = html.Div([
         style={'width': '200px'}
         )
     ], style={'color':'#4b7df0', 'font-family':'monospace', 'display': 'flex', 'justifyContent': 'center', 'align-items': 'center', 'padding': '20px'}),
+    html.Br(),
+    html.Br(),
+    html.Br(),
     html.Div(id="contingency-table"),
     html.Br(),
     html.Br(),
